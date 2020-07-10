@@ -5,13 +5,14 @@ import io.github.frc5024.lib5k.hardware.ctre.motors.ExtendedTalonFX;
 import io.github.frc5024.lib5k.hardware.ctre.motors.ExtendedTalonSRX;
 import io.github.frc5024.lib5k.hardware.ctre.motors.ExtendedVictorSPX;
 import io.github.frc5024.lib5k.hardware.revrobotics.motors.ExtendedSparkMax;
+import io.github.frc5024.lib5k.logging.RobotLogger;
 import io.github.frc5024.testbench.config.hardwareconfigs.MotorConfig;
-
 import java.util.ArrayList;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 
 import ca.retrylife.ewmath.MathUtils;
 import edu.wpi.first.networktables.NetworkTableEntry;
