@@ -73,6 +73,10 @@ public class MotorDashboard {
         tab = Shuffleboard.getTab("Motors");
     }
 
+    /**
+     * Add a motor (or motors) to the panel
+     * @param motors Motor configuration(s)
+     */
     public void addMotors(MotorConfig... motors) {
         for (MotorConfig config : motors) {
 
@@ -145,6 +149,9 @@ public class MotorDashboard {
         }
     }
 
+    /**
+     * Update all components
+     */
     public void update() {
         // Update all motors
         for (MotorData motor : motors) {

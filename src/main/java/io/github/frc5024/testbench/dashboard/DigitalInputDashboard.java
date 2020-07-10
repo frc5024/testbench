@@ -9,104 +9,99 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import io.github.frc5024.lib5k.logging.RobotLogger;
 import io.github.frc5024.testbench.config.hardwareconfigs.DigitalInputConfig;
 
+/**
+ * Dashboard panel for Digital inputs
+ */
 public class DigitalInputDashboard {
     public static DigitalInputDashboard m_instance = null;
 
+    // Dashboard tab
     private ShuffleboardTab tab;
 
-    private ArrayList<DigitalInputData> digitalInputs;
+    /**
+     * Data structure for Digital Input devices
+     */
+    private class DigitalInputData {
+
+        // Input channel
+        public DigitalInput input;
+
+        // Networktables entry for current value
+        public NetworkTableEntry value;
+
+        // Update the NT value
+        public void update() {
+            value.setBoolean(input.get());
+        }
+
+    }
+
+    // List of all added
+    private ArrayList<DigitalInputData> digitalInputs = new ArrayList<>();
 
     private DigitalInputDashboard() {
 
-        tab = Shuffleboard.getTab("Digital Input");
-
-        digitalInputs = new ArrayList<>();
+        // Load the shuffleboard tab for digital inputs
+        tab = Shuffleboard.getTab("Digital Inputs");
     }
 
-    
+    /**
+     * Add a digital input channel (or channels)
+     * 
+     * @param configs Digital input channel configuration(s)
+     */
+    public void addDigitalInput(DigitalInputConfig... configs) {
+        for (DigitalInputConfig config : configs) {
 
+            // Create input data
+            DigitalInputData digitalInput = new DigitalInputData();
 
-    private class DigitalInputData{
+            // Connect to DIO channel
+            try {
+                digitalInput.input = new DigitalInput(config.port);
+            } catch (RuntimeException e) {
+                // If someone writes the same port twice, we will get a RuntimeException from
+                // the FPGA because the same IO handle will have two locks on it.
+                RobotLogger.getInstance().log("DigitalInputDashboard",
+                        String.format(
+                                "Failed to init input %d.\nThis is likely due to two configs for the same port number.",
+                                config.port));
+                continue;
+            }
 
-        public int port;
+            // Add a display box to the panel
+            digitalInput.value = tab.add(String.format("Channel %d", config.port), false).getEntry();
 
-        public NetworkTableEntry inverted;
-
-        public boolean defaultInverted;
-
-        public DigitalInput digitalInput;
-
-        public NetworkTableEntry value;
-
-        
-
-        public DigitalInputData(int port, boolean inverted){
-            this.port = port;
-
-            this.defaultInverted = inverted;
-
-            this.digitalInput = new DigitalInput(port);
-        }
-
-        public boolean readDigitalInput(){
-            return inverted.getBoolean(defaultInverted) ? digitalInput.get() == false : digitalInput.get();
-        }
-
-        public void update(){
-            value.setBoolean(readDigitalInput());
-        }
-
-
-
-    }
-
-
-
-    public void addDigitalInput(DigitalInputConfig... configs){
-
-        for(DigitalInputConfig config:  configs){
-
-            DigitalInputData digitalInput = new DigitalInputData(config.port, config.inverted);
-
+            // Add input to inputs
             digitalInputs.add(digitalInput);
 
-            ShuffleboardLayout layout = tab.getLayout(String.format("Digital Input: %d", config.port),
-                    BuiltInLayouts.kList).withSize(2, 4);
-
-            digitalInput.inverted = layout.add("Digital Input Invert", config.inverted).withWidget(BuiltInWidgets.kToggleSwitch)
-                     .getEntry();
-
-            digitalInput.value = layout.add("Input Value", 0.0).withWidget(BuiltInWidgets.kGraph).getEntry();
-
-
         }
 
     }
 
-
-    private void update(){
-        for(DigitalInputData digitalInput:  digitalInputs){
+    /**
+     * Update all components
+     */
+    public void update() {
+        for (DigitalInputData digitalInput : digitalInputs) {
             digitalInput.update();
         }
     }
 
-
-
     /**
      * Get the Digital Input Dashboard
+     * 
      * @return the Digital Input Dashboard instance
      */
-    public static DigitalInputDashboard getInstance(){
-        if(m_instance == null){
+    public static DigitalInputDashboard getInstance() {
+        if (m_instance == null) {
             m_instance = new DigitalInputDashboard();
         }
 
         return m_instance;
     }
-
-
-
 
 }
