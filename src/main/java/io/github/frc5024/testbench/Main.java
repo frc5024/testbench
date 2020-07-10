@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import io.github.frc5024.lib5k.autonomous.RobotProgram;
 import io.github.frc5024.lib5k.logging.RobotLogger.Level;
 import io.github.frc5024.testbench.config.Parser;
+import io.github.frc5024.testbench.config.hardwareconfigs.DigitalInputConfig;
 import io.github.frc5024.testbench.config.hardwareconfigs.MotorConfig;
+import io.github.frc5024.testbench.dashboard.DigitalInputDashboard;
 import io.github.frc5024.testbench.dashboard.MotorDashboard;
 
 public class Main extends RobotProgram {
@@ -21,12 +23,14 @@ public class Main extends RobotProgram {
 
     // All dashboards
     private MotorDashboard motorDash;
+    private DigitalInputDashboard dioDash;
 
     public Main() {
         super(false, true, Shuffleboard.getTab("Robot Status"));
 
         // Create all dashboards
         motorDash = MotorDashboard.getInstance();
+        dioDash = DigitalInputDashboard.getInstance();
 
         // Set config load status
         NetworkTableEntry configStatus = Shuffleboard.getTab("Robot Status").add("Config Ready", false)
@@ -40,6 +44,12 @@ public class Main extends RobotProgram {
             MotorConfig[] motors = parser.getAllMotors();
             if (motors != null) {
                 motorDash.addMotors(motors);
+            }
+
+            // Load DIO configs
+            DigitalInputConfig[] dis = parser.getAllDigitalInputs();
+            if(dis != null){
+                dioDash.addDigitalInputs(dis);
             }
 
             // Update config status
@@ -78,6 +88,7 @@ public class Main extends RobotProgram {
 
         // Update all dashboards
         motorDash.update();
+        dioDash.update();
 
 
     }

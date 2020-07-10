@@ -53,7 +53,7 @@ public class DigitalInputDashboard {
      * 
      * @param configs Digital input channel configuration(s)
      */
-    public void addDigitalInput(DigitalInputConfig... configs) {
+    public void addDigitalInputs(DigitalInputConfig... configs) {
         for (DigitalInputConfig config : configs) {
 
             // Create input data
