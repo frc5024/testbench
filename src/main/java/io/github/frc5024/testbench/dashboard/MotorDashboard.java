@@ -18,7 +18,6 @@ public class MotorDashboard {
 
     public void addMotor(MotorConfig motor) {
         m_motorConfigs.add(motor);
-        tab = ShuffleBoard.getTab("Motors");
     }
 
     public void update(){
