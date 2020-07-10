@@ -13,5 +13,5 @@ public class MotorConfig {
     public double max_output = 12.0;
     public double min_output = -12.0;
     public boolean inverted = false;
-    public double slew_seconds = 0.0;
+    public int encoderCPR = 4096;
 }

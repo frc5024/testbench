@@ -6,8 +6,7 @@
             "id": 0,
             "max_output": 12,
             "min_output": 12,
-            "inverted": false,
-            "slew_seconds": 0.12
+            "inverted": false
         }
     ],
     "pcm": {
