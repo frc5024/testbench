@@ -64,6 +64,9 @@ dependencies {
 
     // Lib5K
     compile fileTree(dir: 'libs', include: '*.jar')
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
