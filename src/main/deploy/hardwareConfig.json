@@ -1,0 +1,35 @@
+{
+    "motors": [
+        {
+            "bus_type": "CAN",
+            "controller_type": "TalonSRX",
+            "id": 0,
+            "defaults": {
+                "max_output": 12,
+                "min_output": 12,
+                "inverted": false,
+                "slew_seconds": 0.12,
+                "has_encoder": true
+            }
+        }
+    ],
+    "sensors": {
+        "digital": [
+            {
+                "id": 0,
+                "inverted": false
+            }
+        ],
+        "analog": [
+            {
+                "id": 0
+            }
+        ],
+        "gyros": [
+            {
+                "type": "NavX",
+                "port": "MXP"
+            }
+        ]
+    }
+}
