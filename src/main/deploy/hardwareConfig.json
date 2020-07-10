@@ -2,12 +2,37 @@
     "motors": [
         {
             "bus_type": "CAN",
-            "controller_type": "TalonSRX",
-            "id": 0,
-            "max_output": 12,
-            "min_output": 12,
+            "controller": "TalonSRX",
+            "id": 1,
+            "max_output": 12.0,
+            "min_output": -12.0,
+            "inverted": false
+        },
+        {
+            "bus_type": "CAN",
+            "controller": "TalonSRX",
+            "id": 2,
+            "max_output": 12.0,
+            "min_output": -12.0,
             "inverted": false,
-            "slew_seconds": 0.12
+            "encoderCPR":1400
+        },
+        {
+            "bus_type": "CAN",
+            "controller": "TalonSRX",
+            "id": 3,
+            "max_output": 12.0,
+            "min_output": -12.0,
+            "inverted": true
+        },
+        {
+            "bus_type": "CAN",
+            "controller": "TalonSRX",
+            "id": 4,
+            "max_output": 12.0,
+            "min_output": -12.0,
+            "inverted": true,
+            "encoderCPR":1400
         }
     ],
     "pcm": {
