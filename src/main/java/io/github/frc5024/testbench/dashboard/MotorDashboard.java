@@ -52,6 +52,7 @@ public class MotorDashboard {
 
         // Handle setting and getting data
         public void update() {
+            System.out.println(speed.getDouble(0.0));
             output.setVoltage(MathUtils.clamp(speed.getDouble(0.0), minMax[0], minMax[1]));
             output.setInverted(inverted.getBoolean(defaultInverted));
 
@@ -130,13 +131,16 @@ public class MotorDashboard {
 
             // Set up a new list for shuffleboard
             ShuffleboardLayout layout = tab.getLayout(String.format("%s: %d", config.controller.toString(), config.id),
-                    BuiltInLayouts.kList);
+                    BuiltInLayouts.kList).withSize(2, 4);
 
             // Add every list component
             motor.speed = layout.add("Voltage Output", 0.0).withWidget(BuiltInWidgets.kNumberSlider).getEntry();
-            motor.inverted = layout.add("Motor Invert", config.inverted).withWidget(BuiltInWidgets.kBooleanBox)
+            motor.inverted = layout.add("Motor Invert", config.inverted).withWidget(BuiltInWidgets.kToggleSwitch)
                     .getEntry();
             motor.position = layout.add("Rotations", 0.0).withWidget(BuiltInWidgets.kGraph).getEntry();
+
+            // Add the motor to the motors list
+            this.motors.add(motor);
         }
     }
 

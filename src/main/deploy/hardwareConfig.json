@@ -2,10 +2,10 @@
     "motors": [
         {
             "bus_type": "CAN",
-            "controller_type": "TalonSRX",
+            "controller": "TalonSRX",
             "id": 0,
-            "max_output": 12,
-            "min_output": 12,
+            "max_output": 12.0,
+            "min_output": -12.0,
             "inverted": false
         }
     ],
