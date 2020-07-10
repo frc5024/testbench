@@ -8,6 +8,7 @@ import io.github.frc5024.lib5k.hardware.revrobotics.motors.ExtendedSparkMax;
 import io.github.frc5024.testbench.config.hardwareconfigs.MotorConfig;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.EncoderType;
@@ -52,7 +53,6 @@ public class MotorDashboard {
 
         // Handle setting and getting data
         public void update() {
-            System.out.println(speed.getDouble(0.0));
             output.setVoltage(MathUtils.clamp(speed.getDouble(0.0), minMax[0], minMax[1]));
             output.setInverted(inverted.getBoolean(defaultInverted));
 
@@ -134,7 +134,7 @@ public class MotorDashboard {
                     BuiltInLayouts.kList).withSize(2, 4);
 
             // Add every list component
-            motor.speed = layout.add("Voltage Output", 0.0).withWidget(BuiltInWidgets.kNumberSlider).getEntry();
+            motor.speed = layout.add("Voltage Output", 0.0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -12.0, "max", 12.0)).getEntry();
             motor.inverted = layout.add("Motor Invert", config.inverted).withWidget(BuiltInWidgets.kToggleSwitch)
                     .getEntry();
             motor.position = layout.add("Rotations", 0.0).withWidget(BuiltInWidgets.kGraph).getEntry();
