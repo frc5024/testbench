@@ -25,7 +25,9 @@ public class Datatypes {
      */
     public static class GyroType {
         public static enum DeviceType {
-            NavX, ADXR, PigeonIMU;
+            NavX, // MXP & SPI
+            ADXR, // SPI
+            PigeonIMU; // CAN
         }
 
         public static enum DevicePort {
@@ -34,7 +36,7 @@ public class Datatypes {
 
         public DeviceType type;
         public DevicePort port;
-        public int portID = 0;
+        public int portID = 0; // For MXP and SPI, this isn't used
     }
 
     /**
