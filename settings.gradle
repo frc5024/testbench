@@ -1,5 +1,3 @@
-rootProject.name = 'testbench'
-
 import org.gradle.internal.os.OperatingSystem
 
 pluginManagement {

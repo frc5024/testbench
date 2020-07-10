@@ -4,15 +4,15 @@
             "bus_type": "CAN",
             "controller_type": "TalonSRX",
             "id": 0,
-            "defaults": {
-                "max_output": 12,
-                "min_output": 12,
-                "inverted": false,
-                "slew_seconds": 0.12,
-                "has_encoder": true
-            }
+            "max_output": 12,
+            "min_output": 12,
+            "inverted": false,
+            "slew_seconds": 0.12
         }
     ],
+    "pcm": {
+        "can_id": 8
+    },
     "sensors": {
         "digital": [
             {
