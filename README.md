@@ -22,7 +22,7 @@ The *testbench* configuration file (stored at `./src/main/deploy/hardwareConfig.
 
 The following is the motor configuration schema:
 
-```json
+```js
 {
     // Communication bus type. This is how the motor controller 
     // is connected to the RoboRIO. Can be one of:
