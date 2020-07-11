@@ -27,12 +27,18 @@ public class GyroDashboard {
 
     public ShuffleboardTab tab;
 
+    /**
+     * Class for storing Gyro Data
+     */
     private class GyroDashboardData {
 
         public ISimGyro input;
 
         public NetworkTableEntry value;
 
+        /**
+         * Updates the value
+         */
         public void update() {
             value.setDouble(input.getAngle());
         }
@@ -41,17 +47,25 @@ public class GyroDashboard {
 
     private GyroDashboard() {
 
+        // Creates the tab
         tab = Shuffleboard.getTab("Gyro");
 
+        // Creates the list
         gyroDashboardDatas = new ArrayList<>();
 
     }
 
+    /**
+     * Adds gyros to the gyro list
+     * @param gyros gyros to add to the list
+     */
     public void addGyros(GyroConfig... gyros) {
         for (GyroConfig gyro : gyros) {
 
+            // Creates Gyro Dashboard Data
             GyroDashboardData gyroDashboardData = new GyroDashboardData();
 
+            // Checks if the bus type is allowed for it's model
             if (!Arrays.asList(gyro.device_type.allowedTypes).contains(gyro.bus_type)) {
                 RobotLogger.getInstance().log("GyroDashboard",
                         String.format("Gyro %d's bus type is not allowed for it's model", gyro.id),
@@ -61,7 +75,7 @@ public class GyroDashboard {
             }
 
 
-
+            // Adds the correct gyro to the data
             switch (gyro.device_type) {
                 case ADXR:
                     gyroDashboardData.input = new ADGyro();
@@ -76,16 +90,22 @@ public class GyroDashboard {
                     break;
             }
 
+            // Resets the gyro
             gyroDashboardData.input.reset();
 
+            // Adds the value to shuffleboard
             gyroDashboardData.value = tab.add(String.format("Gyro %s", gyro.device_type.toString()), 0).withWidget(BuiltInWidgets.kGyro).getEntry();
 
+            // Adds the gyro to the gyro list
             gyroDashboardDatas.add(gyroDashboardData);
 
         }
     }
 
 
+    /**
+     * Updates all gyros
+     */
     public void update(){
         for (GyroDashboardData gyroDashboardData : gyroDashboardDatas) {
             gyroDashboardData.update();
@@ -93,6 +113,10 @@ public class GyroDashboard {
     }
 
 
+    /**
+     * Gets the GyroDashboard instance
+     * @return the GyroDashboard instance
+     */
     public static GyroDashboard getInstance() {
         if (m_instance == null) {
             m_instance = new GyroDashboard();
