@@ -6,13 +6,12 @@ import io.github.frc5024.lib5k.hardware.ctre.motors.ExtendedTalonSRX;
 import io.github.frc5024.lib5k.hardware.ctre.motors.ExtendedVictorSPX;
 import io.github.frc5024.lib5k.hardware.revrobotics.motors.ExtendedSparkMax;
 import io.github.frc5024.testbench.config.hardwareconfigs.MotorConfig;
-
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 
 import ca.retrylife.ewmath.MathUtils;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -72,6 +71,10 @@ public class MotorDashboard {
         tab = Shuffleboard.getTab("Motors");
     }
 
+    /**
+     * Add a motor (or motors) to the panel
+     * @param motors Motor configuration(s)
+     */
     public void addMotors(MotorConfig... motors) {
         for (MotorConfig config : motors) {
 
@@ -144,6 +147,9 @@ public class MotorDashboard {
         }
     }
 
+    /**
+     * Update all components
+     */
     public void update() {
         // Update all motors
         for (MotorData motor : motors) {

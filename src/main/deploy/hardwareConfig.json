@@ -40,15 +40,10 @@
     },
     "sensors": {
         "digital": [
-            {
-                "id": 0,
-                "inverted": false
-            }
+            {"id": 0}
         ],
         "analog": [
-            {
-                "id": 0
-            }
+            {"id": 0}
         ],
         "gyros": [
             {
