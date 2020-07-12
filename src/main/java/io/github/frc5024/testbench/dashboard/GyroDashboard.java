@@ -3,10 +3,12 @@ package io.github.frc5024.testbench.dashboard;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GyroBase;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -23,7 +25,7 @@ import io.github.frc5024.testbench.config.hardwareconfigs.GyroConfig;
 public class GyroDashboard {
     public static GyroDashboard m_instance = null;
 
-    public ArrayList<GyroDashboardData> gyroDashboardDatas;
+    public ArrayList<GyroDashboardData> gyroDashboardDatas = new ArrayList<>();
 
     public ShuffleboardTab tab;
 
@@ -32,7 +34,7 @@ public class GyroDashboard {
      */
     private class GyroDashboardData {
 
-        public ISimGyro input;
+        public Gyro input;
 
         public NetworkTableEntry value;
 
@@ -50,13 +52,11 @@ public class GyroDashboard {
         // Creates the tab
         tab = Shuffleboard.getTab("Gyro");
 
-        // Creates the list
-        gyroDashboardDatas = new ArrayList<>();
-
     }
 
     /**
      * Adds gyros to the gyro list
+     * 
      * @param gyros gyros to add to the list
      */
     public void addGyros(GyroConfig... gyros) {
@@ -74,14 +74,27 @@ public class GyroDashboard {
                 continue;
             }
 
-
             // Adds the correct gyro to the data
             switch (gyro.device_type) {
                 case ADXR:
                     gyroDashboardData.input = new ADGyro();
                     break;
                 case NavX:
-                    gyroDashboardData.input = new NavX();
+                    switch (gyro.bus_type) {
+                        case I2C:
+                            gyroDashboardData.input = (NavX) (new AHRS(I2C.Port.kOnboard));
+                            break;
+                        case MXP:
+                            gyroDashboardData.input = new NavX();
+                            break;
+                        case SPI:
+                            gyroDashboardData.input = (NavX) (new AHRS(SPI.Port.kOnboardCS0));
+                            break;
+                        default:
+                            break;
+
+                    }
+
                     break;
                 case PigeonIMU:
                     gyroDashboardData.input = new ExtendedPigeonIMU(gyro.id);
@@ -94,7 +107,8 @@ public class GyroDashboard {
             gyroDashboardData.input.reset();
 
             // Adds the value to shuffleboard
-            gyroDashboardData.value = tab.add(String.format("Gyro %s", gyro.device_type.toString()), 0).withWidget(BuiltInWidgets.kGyro).getEntry();
+            gyroDashboardData.value = tab.add(String.format("Gyro %s", gyro.device_type.toString()), 0)
+                    .withWidget(BuiltInWidgets.kGyro).getEntry();
 
             // Adds the gyro to the gyro list
             gyroDashboardDatas.add(gyroDashboardData);
@@ -102,19 +116,18 @@ public class GyroDashboard {
         }
     }
 
-
     /**
      * Updates all gyros
      */
-    public void update(){
+    public void update() {
         for (GyroDashboardData gyroDashboardData : gyroDashboardDatas) {
             gyroDashboardData.update();
         }
     }
 
-
     /**
      * Gets the GyroDashboard instance
+     * 
      * @return the GyroDashboard instance
      */
     public static GyroDashboard getInstance() {

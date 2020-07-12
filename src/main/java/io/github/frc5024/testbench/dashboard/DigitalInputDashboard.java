@@ -73,7 +73,7 @@ public class DigitalInputDashboard {
             }
 
             // Add a display box to the panel
-            digitalInput.value = tab.add(String.format("Channel %d", config.port), false).getEntry();
+            digitalInput.value = tab.add(String.format("Channel %d", config.port), false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
 
             // Add input to inputs
             digitalInputs.add(digitalInput);

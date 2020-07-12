@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import io.github.frc5024.lib5k.logging.RobotLogger;
@@ -42,7 +43,7 @@ public class AnalogInputDashboard {
          * Update the value
          */
         public void update() {
-            value.setDouble(input.getValue());
+            value.setDouble(input.getVoltage());
         }
 
     }
@@ -61,7 +62,7 @@ public class AnalogInputDashboard {
             try {
                 analogInput.input = new AnalogInput(config.port);
             } catch (RuntimeException e) {
-                RobotLogger.getInstance().log("DigitalInputDashboard",
+                RobotLogger.getInstance().log("AnalogInputDashboard",
                         String.format(
                                 "Failed to init input %d.\nThis is likely due to two configs for the same port number.",
                                 config.port));
@@ -69,7 +70,7 @@ public class AnalogInputDashboard {
             }
 
             // adds the value to network tables
-            analogInput.value = tab.add(String.format("Channel %d", config.port), 0).getEntry();
+            analogInput.value = tab.add(String.format("Channel %d Voltage", config.port), 0).withWidget(BuiltInWidgets.kGraph).getEntry();
 
             // adds the Analog Input Data to the list
             analogInputData.add(analogInput);

@@ -2,8 +2,10 @@ package io.github.frc5024.testbench.dashboard;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -16,62 +18,68 @@ public class PCMDashboard {
     // The PCM shuffleboard tab
     private ShuffleboardTab tab;
 
-    // PCM Data list
-    private ArrayList<PCMData> pcmData;
+    // Compressor
+    private Compressor compressor;
+    private NetworkTableEntry compressorValue;
 
-    private class PCMData {
+    // Solenoids
+    private ArrayList<SolenoidData> solenoids = new ArrayList<>();
 
-        public Compressor input;
-
+    private class SolenoidData {
+        public Solenoid output;
         public NetworkTableEntry value;
 
-        /**
-         * Updates the pnuematics
-         */
         public void update() {
-            input.setClosedLoopControl(value.getBoolean(false));
+            output.set(value.getBoolean(false));
         }
-
     }
 
     private PCMDashboard() {
         tab = Shuffleboard.getTab("PCM");
-        pcmData = new ArrayList<>();
     }
 
-    /**
-     * Adds PCM to the list and adds them to shuffleboard
-     * @param configs 
-     */
-    public void addPCMs(PCMConfig... configs) {
-        for (PCMConfig config : configs) {
+    public void configPCM(PCMConfig config) {
 
-            // Creates a PCM Data Class
-            PCMData pcmData = new PCMData();
+        // Set up compressor
+        compressor = new Compressor(config.can_id);
+        compressorValue = tab.add("Compressor", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
-            // Adds a compressor to the input
-            pcmData.input = new Compressor(config.can_id);
+        // Set up each PCM channel
+        for (int i = 0; i < 8; i++) {
+            SolenoidData s = new SolenoidData();
 
-            // adds the value to shuffleboard
-            pcmData.value = tab.add("Closed Loop Inabled", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+            // Set up output
+            s.output = new Solenoid(config.can_id, i);
 
-            // adds it to the pcm data list
-            this.pcmData.add(pcmData);
+            // Set up dashboard output
+            s.value = tab.add(String.format("Channel %d", i), false).withWidget(BuiltInWidgets.kToggleSwitch)
+                    .getEntry();
 
+            // Add to list
+            solenoids.add(s);
         }
+
     }
 
     /**
      * Updates the pcm dashboard
      */
     public void update() {
-        for (PCMData pcmData2 : pcmData) {
-            pcmData2.update();
+
+        // Handle compressor
+        if (compressor != null) {
+            compressor.setClosedLoopControl(compressorValue.getBoolean(false));
+        }
+
+        // Handle all channels
+        for (SolenoidData solenoid : solenoids) {
+            solenoid.update();
         }
     }
 
     /**
      * Gets the PCMDashboard instance
+     * 
      * @return a PCMDashboard instance
      */
     public static PCMDashboard getInstance() {

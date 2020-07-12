@@ -10,10 +10,16 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import io.github.frc5024.lib5k.autonomous.RobotProgram;
 import io.github.frc5024.lib5k.logging.RobotLogger.Level;
 import io.github.frc5024.testbench.config.Parser;
+import io.github.frc5024.testbench.config.hardwareconfigs.AnalogInputConfig;
 import io.github.frc5024.testbench.config.hardwareconfigs.DigitalInputConfig;
+import io.github.frc5024.testbench.config.hardwareconfigs.GyroConfig;
 import io.github.frc5024.testbench.config.hardwareconfigs.MotorConfig;
+import io.github.frc5024.testbench.config.hardwareconfigs.PCMConfig;
+import io.github.frc5024.testbench.dashboard.AnalogInputDashboard;
 import io.github.frc5024.testbench.dashboard.DigitalInputDashboard;
+import io.github.frc5024.testbench.dashboard.GyroDashboard;
 import io.github.frc5024.testbench.dashboard.MotorDashboard;
+import io.github.frc5024.testbench.dashboard.PCMDashboard;
 
 public class Main extends RobotProgram {
 
@@ -24,6 +30,9 @@ public class Main extends RobotProgram {
     // All dashboards
     private MotorDashboard motorDash;
     private DigitalInputDashboard dioDash;
+    private AnalogInputDashboard aioDash;
+    private GyroDashboard gyroDash;
+    private PCMDashboard pcmDash;
 
     public Main() {
         super(false, true, Shuffleboard.getTab("Robot Status"));
@@ -31,6 +40,9 @@ public class Main extends RobotProgram {
         // Create all dashboards
         motorDash = MotorDashboard.getInstance();
         dioDash = DigitalInputDashboard.getInstance();
+        aioDash = AnalogInputDashboard.getInstance();
+        gyroDash = GyroDashboard.getInstance();
+        pcmDash = PCMDashboard.getInstance();
 
         // Set config load status
         NetworkTableEntry configStatus = Shuffleboard.getTab("Robot Status").add("Config Ready", false)
@@ -48,8 +60,26 @@ public class Main extends RobotProgram {
 
             // Load DIO configs
             DigitalInputConfig[] dis = parser.getAllDigitalInputs();
-            if(dis != null){
+            if (dis != null) {
                 dioDash.addDigitalInputs(dis);
+            }
+            
+            // Load AIO configs
+            AnalogInputConfig[] ais = parser.getAllAnalogInputs();
+            if (ais != null) {
+                aioDash.addAnalogInputs(ais);
+            }
+
+            // Load all gyros
+            GyroConfig[] gyros = parser.getAllGyros();
+            if (gyros != null) {
+                gyroDash.addGyros(gyros);
+            }
+
+            // Load PCM
+            PCMConfig pcm = parser.getPCMConfig();
+            if (pcm != null) {
+                pcmDash.configPCM(pcm);
             }
 
             // Update config status
@@ -89,6 +119,9 @@ public class Main extends RobotProgram {
         // Update all dashboards
         motorDash.update();
         dioDash.update();
+        aioDash.update();
+        gyroDash.update();
+        pcmDash.update();
 
 
     }
