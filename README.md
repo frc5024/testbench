@@ -76,8 +76,60 @@ The deploy process is identical to any other robot program. Just run:
 
 ## Full example config file
 
-```json
+```js
 {
-    // Work in progress
+    "motors": [
+        {
+            "bus_type": "CAN",
+            "controller": "TalonSRX",
+            "id": 1,
+            "max_output": 12.0,
+            "min_output": -12.0,
+            "inverted": false
+        },
+        {
+            "bus_type": "CAN",
+            "controller": "TalonSRX",
+            "id": 2,
+            "max_output": 12.0,
+            "min_output": -12.0,
+            "inverted": false,
+            "encoderCPR":1400
+        },
+        {
+            "bus_type": "CAN",
+            "controller": "TalonSRX",
+            "id": 3,
+            "max_output": 12.0,
+            "min_output": -12.0,
+            "inverted": true
+        },
+        {
+            "bus_type": "CAN",
+            "controller": "TalonSRX",
+            "id": 4,
+            "max_output": 12.0,
+            "min_output": -12.0,
+            "inverted": true,
+            "encoderCPR":1400
+        }
+    ],
+    "pcm": {
+        "can_id": 8
+    },
+    "sensors": {
+        "digital": [
+            {"id": 0}
+        ],
+        "analog": [
+            {"id": 0}
+        ],
+        "gyros": [
+            {
+                "type": "NavX",
+                "port": "MXP"
+            }
+        ]
+    }
 }
 ```
